@@ -1,0 +1,7 @@
+payload,label
+<script>alert(1)</script>,1
+<img src=x onerror=alert(1)>,1
+%3Cscript%3Ealert(1)%3C/script%3E,1
+GET /home HTTP/1.1,0
+POST /login HTTP/1.1,0
+GET /search?q=books HTTP/1.1,0
