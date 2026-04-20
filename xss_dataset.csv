@@ -1,0 +1,22 @@
+payload,label
+<script>alert(1)</script>,1
+<img src=x onerror=alert(1)>,1
+<svg onload=alert(1)>,1
+<iframe src=javascript:alert(1)>,1
+<ScRiPt>alert('XSS')</ScRiPt>,1
+%3Cscript%3Ealert(1)%3C/script%3E,1
+&lt;script&gt;alert(1)&lt;/script&gt;,1
+<script>document.cookie</script>,1
+<input onfocus=alert(1) autofocus>,1
+<body onload=alert(1)>,1
+
+GET /home HTTP/1.1,0
+POST /login HTTP/1.1,0
+GET /products?id=123 HTTP/1.1,0
+GET /search?q=books HTTP/1.1,0
+POST /checkout HTTP/1.1,0
+GET /about HTTP/1.1,0
+POST /api/user HTTP/1.1,0
+GET /contact HTTP/1.1,0
+GET /profile?id=45 HTTP/1.1,0
+POST /feedback HTTP/1.1,0
