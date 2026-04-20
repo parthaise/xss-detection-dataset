@@ -1,0 +1,4 @@
+<script>alert(1)</script>,1
+<svg onload=alert(1)>,1
+<img src=x onerror=alert(document.cookie)>,1
+<iframe src=javascript:alert(1)>,1
